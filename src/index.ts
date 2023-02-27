@@ -23,8 +23,9 @@ const connectDatabase = async (): Promise<typeof mongoose> => {
 const init = () => {
   try {
     connectDatabase().then(() => {
-      app.listen(PORT);
-      console.log(`App is Running on http://localhost:${PORT}`);
+      app.listen(PORT, () => {
+        console.log(`App is Running on http://localhost:${PORT}`);
+      });
     });
   } catch (err) {
     console.log(`Server error: ${err}`);
