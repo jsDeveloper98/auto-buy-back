@@ -3,20 +3,28 @@ import { check } from "express-validator";
 
 import { AuthController } from "../controllers";
 
-const authRoute = Router();
+const router = Router();
 
+// TODO: add repeat password field in order to help use to avoid make some mistake
 // /auth/register
-authRoute.post("/register", [
-  check("email", "Wrong email").normalizeEmail().isEmail(),
-  check("password", "Wrong password").isLength({ min: 6 }),
-  AuthController.register,
-]);
+router.post(
+  "/register",
+  [
+    check("email", "Wrong email").normalizeEmail().isEmail(),
+    check("password", "Wrong password").isLength({ min: 6, max: 30 }),
+    check("username", "Wrong username").isLength({ min: 6, max: 30 }),
+  ],
+  AuthController.register
+);
 
 // /auth/login
-authRoute.post("/login", [
-  check("email", "Enter valid email").normalizeEmail().isEmail(),
-  check("password", "Enter password").exists(),
-  AuthController.login,
-]);
+router.post(
+  "/login",
+  [
+    check("password", "Enter password").exists(),
+    check("email", "Enter valid email").normalizeEmail().isEmail(),
+  ],
+  AuthController.login
+);
 
-export { authRoute };
+export { router as authRoute };

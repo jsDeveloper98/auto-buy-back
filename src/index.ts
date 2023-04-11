@@ -3,7 +3,7 @@ import express from "express";
 import mongoose from "mongoose";
 import { config } from "dotenv";
 
-import { authRoute } from "./routes";
+import { authRoute, announcementRoute } from "./routes";
 
 config();
 
@@ -12,8 +12,10 @@ const { PORT, MONGO_URI } = process.env;
 
 app.use(cors());
 app.use(express.json());
+app.use("/uploads", express.static("uploads"));
 
 app.use("/auth", authRoute);
+app.use("/announcements", announcementRoute);
 
 const connectDatabase = async (): Promise<typeof mongoose> => {
   mongoose.set("strictQuery", false);

@@ -16,9 +16,11 @@ class AuthC {
     console.log("%c req ===>", "color: #90ee90", req.body);
 
     try {
-      const error = validationResult(req);
+      // TODO: think about how to send errors to front end and how to handle all field errors
 
-      if (!error.isEmpty()) {
+      const errors = validationResult(req);
+
+      if (!errors.isEmpty()) {
         return res
           .status(400)
           .json({ message: "Wrong data for register", data: null });
@@ -56,9 +58,10 @@ class AuthC {
 
   async login(req: Request, res: Response) {
     try {
-      const error = validationResult(req);
+      const errors = validationResult(req);
 
-      if (!error.isEmpty()) {
+      // TODO: think about how to send errors to front end and how to handle all field errors
+      if (!errors.isEmpty()) {
         return res
           .status(400)
           .json({ message: "Wrong data for login", data: null });
