@@ -2,17 +2,26 @@ import { Router } from "express";
 import { check } from "express-validator";
 
 import { AuthController } from "../controllers";
+import { getFieldValidationMessage } from "../utils";
+import { INPUT_TYPE_MIN_LENGTH, INPUT_TYPE_MAX_LENGTH } from "../constants";
 
 const router = Router();
 
-// TODO: add repeat password field in order to help use to avoid make some mistake
 // /auth/register
 router.post(
   "/register",
   [
-    check("email", "Wrong email").normalizeEmail().isEmail(),
-    check("password", "Wrong password").isLength({ min: 6, max: 30 }),
-    check("username", "Wrong username").isLength({ min: 6, max: 30 }),
+    check("email", getFieldValidationMessage("Email", "invalid"))
+      .normalizeEmail()
+      .isEmail(),
+    check("password", getFieldValidationMessage("Password", "input")).isLength({
+      min: INPUT_TYPE_MIN_LENGTH,
+      max: INPUT_TYPE_MAX_LENGTH,
+    }),
+    check("username", getFieldValidationMessage("Username", "input")).isLength({
+      min: INPUT_TYPE_MIN_LENGTH,
+      max: INPUT_TYPE_MAX_LENGTH,
+    }),
   ],
   AuthController.register
 );
@@ -21,8 +30,13 @@ router.post(
 router.post(
   "/login",
   [
-    check("password", "Enter password").exists(),
-    check("email", "Enter valid email").normalizeEmail().isEmail(),
+    check(
+      "password",
+      getFieldValidationMessage("Password", "required")
+    ).exists(),
+    check("email", getFieldValidationMessage("Email", "invalid"))
+      .normalizeEmail()
+      .isEmail(),
   ],
   AuthController.login
 );

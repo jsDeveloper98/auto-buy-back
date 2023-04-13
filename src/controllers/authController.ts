@@ -13,23 +13,20 @@ const { JWT_SECRET } = process.env;
 
 class AuthC {
   async register(req: Request, res: Response) {
-    console.log("%c req ===>", "color: #90ee90", req.body);
-
     try {
-      // TODO: think about how to send errors to front end and how to handle all field errors
-
       const errors = validationResult(req);
 
       if (!errors.isEmpty()) {
-        return res
-          .status(400)
-          .json({ message: "Wrong data for register", data: null });
+        return res.status(400).json({
+          data: null,
+          errors: errors.array(),
+          message: "Wrong data for register",
+        });
       }
 
       let { email, password } = req.body as IUser;
 
       const duplicateEmail = await User.findOne({ email });
-
       if (duplicateEmail) {
         return res
           .status(400)
@@ -49,7 +46,7 @@ class AuthC {
 
       res.status(201).json({
         message: "Registration is completed",
-        data: { token, userId: user._id },
+        data: { token, userId: user.id },
       });
     } catch (e: any) {
       res.status(400).json({ message: e.message, data: null });
@@ -60,11 +57,12 @@ class AuthC {
     try {
       const errors = validationResult(req);
 
-      // TODO: think about how to send errors to front end and how to handle all field errors
       if (!errors.isEmpty()) {
-        return res
-          .status(400)
-          .json({ message: "Wrong data for login", data: null });
+        return res.status(400).json({
+          data: null,
+          errors: errors.array(),
+          message: "Wrong data for login",
+        });
       }
 
       const { email, password } = req.body as IUser;
@@ -76,20 +74,19 @@ class AuthC {
       }
 
       const isMatch = await compare(password, user.password);
-
       if (!isMatch) {
         return res
           .status(400)
           .json({ message: "Incorrect password", data: null });
       }
 
-      const token = sign({ userId: user._id }, JWT_SECRET as string, {
+      const token = sign({ userId: user.id }, JWT_SECRET as string, {
         expiresIn: "7d",
       });
 
       res.json({
-        message: "Successfully signed in",
-        data: { token, userId: user._id },
+        message: "Successfully logged in",
+        data: { token, userId: user.id },
       });
     } catch (e: any) {
       res.status(400).json({ message: e.message, data: null });

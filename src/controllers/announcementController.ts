@@ -16,8 +16,6 @@ const { JWT_SECRET } = process.env;
 
 class AnnouncementC {
   async create(req: Request, res: Response) {
-    console.log("%c req ===>", "color: #90ee90", req.body);
-    console.log("Files:", req.files);
     try {
       const errors = validationResult(req);
 
@@ -37,19 +35,19 @@ class AnnouncementC {
           };
         });
 
-      console.log("%c files777777 ===>", "color: #90ee90", files);
-
-      console.log({
+      const announcementModel = new Announcement({
         ...req.body,
         files,
       });
 
-      const newMyModel = new Announcement({
-        ...req.body,
-        images: files,
-      });
+      const announcement = await announcementModel.save();
 
-      console.log("%c newMyModel ===>", "color: #90ee90", newMyModel);
+      console.log("%c announcement ===>", "color: #90ee90", announcement);
+
+      res.status(201).json({
+        message: "Successfully created",
+        data: announcement,
+      });
     } catch (e: any) {
       res.status(400).json({ message: e.message, data: null });
     }

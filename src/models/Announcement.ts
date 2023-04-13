@@ -5,7 +5,7 @@ const schema = new Schema({
   description: { type: String, required: true },
   model: { type: String, required: true },
   title: { type: String, required: true },
-  images: { type: Array, required: true },
+  files: { type: Array, required: true },
   manufacturer: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
 });
