@@ -30,7 +30,9 @@ const init = () => {
       });
     });
   } catch (err) {
-    console.log(`Server error: ${err}`);
+    if (err instanceof Error) {
+      console.log(`Server error: ${err.message}`);
+    }
   }
 };
 

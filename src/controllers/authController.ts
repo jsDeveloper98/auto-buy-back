@@ -33,23 +33,25 @@ class AuthC {
           .json({ message: "Such user already exists", data: null });
       }
 
-      const userCandidate = new User({
+      const userModel = new User({
         ...req.body,
         password: await hash(password, 12),
       });
 
-      const user = await userCandidate.save();
+      const user = await userModel.save();
 
       const token = sign({ userId: user._id }, JWT_SECRET as string, {
         expiresIn: "7d",
       });
 
       res.status(201).json({
-        message: "Registration is completed",
         data: { token, userId: user.id },
+        message: "Registration is completed",
       });
-    } catch (e: any) {
-      res.status(400).json({ message: e.message, data: null });
+    } catch (err) {
+      if (err instanceof Error) {
+        res.status(400).json({ message: err.message, data: null });
+      }
     }
   }
 
@@ -88,8 +90,10 @@ class AuthC {
         message: "Successfully logged in",
         data: { token, userId: user.id },
       });
-    } catch (e: any) {
-      res.status(400).json({ message: e.message, data: null });
+    } catch (err) {
+      if (err instanceof Error) {
+        res.status(400).json({ message: err.message, data: null });
+      }
     }
   }
 }

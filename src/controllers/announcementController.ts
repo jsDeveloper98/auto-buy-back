@@ -1,55 +1,49 @@
 import { config } from "dotenv";
-import { sign } from "jsonwebtoken";
-import { compare, hash } from "bcrypt";
 import { Request, Response } from "express";
 import { validationResult } from "express-validator";
 
-import { User } from "../models";
-import { IUser } from "../types";
+import { IRequest } from "../types";
 import { Announcement } from "../models/Announcement";
 
 config();
 
-const { JWT_SECRET } = process.env;
-
-// TODO finish announcement creation
-
 class AnnouncementC {
-  async create(req: Request, res: Response) {
+  async create(req: IRequest, res: Response) {
     try {
       const errors = validationResult(req);
 
       if (!errors.isEmpty()) {
-        return res
-          .status(400)
-          .json({ message: "Wrong data for announcement", data: null, errors });
+        return res.status(400).json({
+          data: null,
+          errors: errors.array(),
+          message: "Wrong data for announcement",
+        });
       }
 
       const files =
         Array.isArray(req.files) &&
-        req.files.map((file) => {
-          return {
-            filename: file.filename,
-            path: file.path,
-            url: `uploads/${file.filename}`,
-          };
-        });
+        req.files.map((file) => ({
+          path: file.path,
+          filename: file.filename,
+          url: `uploads/${file.filename}`,
+        }));
 
       const announcementModel = new Announcement({
         ...req.body,
         files,
+        user: req.user?.userId,
       });
 
       const announcement = await announcementModel.save();
 
-      console.log("%c announcement ===>", "color: #90ee90", announcement);
-
       res.status(201).json({
-        message: "Successfully created",
         data: announcement,
+        message: "Successfully created",
       });
-    } catch (e: any) {
-      res.status(400).json({ message: e.message, data: null });
+    } catch (err) {
+      if (err instanceof Error) {
+        res.status(400).json({ message: err.message, data: null });
+      }
     }
   }
 }
