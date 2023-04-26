@@ -5,6 +5,7 @@ const schema = new Schema(
     price: { type: Number },
     files: { type: Array, required: true },
     make: { type: String, required: true },
+    year: { type: Number, required: true },
     model: { type: String, required: true },
     title: { type: String, required: true },
     user: { type: Types.ObjectId, ref: "User" },

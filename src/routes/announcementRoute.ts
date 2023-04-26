@@ -33,6 +33,9 @@ router.post(
     check("price").optional().isNumeric(),
     check("make", getFieldValidationMessage("Make", "required")).exists(),
     check("model", getFieldValidationMessage("Model", "required")).exists(),
+    check("year", getFieldValidationMessage("Year", "required"))
+      .isNumeric()
+      .exists(),
     check("title", getFieldValidationMessage("Title", "input")).isLength({
       min: INPUT_TYPE_MIN_LENGTH,
       max: INPUT_TYPE_MAX_LENGTH,
