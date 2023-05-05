@@ -46,6 +46,21 @@ class AnnouncementC {
       }
     }
   }
+
+  async getUserAnnouncements(req: IRequest, res: Response) {
+    try {
+      const announcements = await Announcement.find({ user: req.user?.userId });
+
+      res.json({
+        data: announcements,
+        message: "Successfully fetched",
+      });
+    } catch (err) {
+      if (err instanceof Error) {
+        res.status(400).json({ message: err.message, data: null });
+      }
+    }
+  }
 }
 
 export const AnnouncementController = new AnnouncementC();
