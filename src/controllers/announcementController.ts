@@ -2,13 +2,12 @@ import { config } from "dotenv";
 import { Request, Response } from "express";
 import { validationResult } from "express-validator";
 
-import { IRequest } from "../types";
 import { Announcement } from "../models/Announcement";
 
 config();
 
 class AnnouncementC {
-  async create(req: IRequest, res: Response) {
+  async create(req: Request, res: Response) {
     try {
       const errors = validationResult(req);
 
@@ -31,7 +30,7 @@ class AnnouncementC {
       const announcementModel = new Announcement({
         ...req.body,
         files,
-        user: req.user?.userId,
+        user: req.params.userId,
       });
 
       const announcement = await announcementModel.save();
@@ -47,9 +46,11 @@ class AnnouncementC {
     }
   }
 
-  async getUserAnnouncements(req: IRequest, res: Response) {
+  async get(req: Request, res: Response) {
     try {
-      const announcements = await Announcement.find({ user: req.user?.userId });
+      const announcements = await Announcement.find({
+        user: req.params.userId,
+      });
 
       res.json({
         data: announcements,

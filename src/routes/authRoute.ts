@@ -5,10 +5,8 @@ import { validateLogin, validateRegister } from "../validators";
 
 const router = Router();
 
-// /auth/login
-router.post("/login", validateLogin(), AuthController.login);
+router.post("/auth/login", validateLogin(), AuthController.login);
 
-// /auth/register
-router.post("/register", validateRegister(), AuthController.register);
+router.post("/auth/register", validateRegister(), AuthController.register);
 
 export { router as authRoute };

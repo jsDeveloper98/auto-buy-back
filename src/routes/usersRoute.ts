@@ -8,14 +8,16 @@ import { validateAnnouncementCreation } from "../validators";
 const router = Router();
 const upload = getUpload();
 
-// /announcements
 router.post(
-  "/",
+  "/users/:userId/announcements",
   [checkAuth, upload.array("files"), ...validateAnnouncementCreation()],
   AnnouncementController.create
 );
 
-// /announcements/user
-router.get("/user", checkAuth, AnnouncementController.getUserAnnouncements);
+router.get(
+  "/users/:userId/announcements",
+  checkAuth,
+  AnnouncementController.get
+);
 
-export { router as announcementRoute };
+export { router as userRoute };

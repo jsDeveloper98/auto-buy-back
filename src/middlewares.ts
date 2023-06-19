@@ -1,6 +1,6 @@
 import { config } from "dotenv";
-import { JwtPayload, verify } from "jsonwebtoken";
-import { Request, Response, NextFunction } from "express";
+import { verify } from "jsonwebtoken";
+import { Response, NextFunction } from "express";
 
 import { IJwtPayload, IRequest } from "./types";
 

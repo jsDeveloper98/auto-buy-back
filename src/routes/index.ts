@@ -1,2 +1,2 @@
 export * from "./authRoute";
-export * from "./announcementRoute";
+export * from "./usersRoute";
