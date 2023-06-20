@@ -19,7 +19,7 @@ class AnnouncementC {
         });
       }
 
-      const files =
+      const images =
         Array.isArray(req.files) &&
         req.files.map((file) => ({
           path: file.path,
@@ -29,7 +29,7 @@ class AnnouncementC {
 
       const announcementModel = new Announcement({
         ...req.body,
-        files,
+        images,
         user: req.params.userId,
       });
 

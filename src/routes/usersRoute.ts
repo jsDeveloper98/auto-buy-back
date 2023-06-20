@@ -10,7 +10,7 @@ const upload = getUpload();
 
 router.post(
   "/users/:userId/announcements",
-  [checkAuth, upload.array("files"), ...validateAnnouncementCreation()],
+  [checkAuth, upload.array("images"), ...validateAnnouncementCreation()],
   AnnouncementController.create
 );
 

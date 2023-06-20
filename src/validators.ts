@@ -2,6 +2,8 @@ import { ValidationChain, check } from "express-validator";
 
 import { getFieldValidationMessage } from "./utils";
 import {
+  MIN_CAR_PRICE,
+  MAX_CAR_PRICE,
   INPUT_TYPE_MAX_LENGTH,
   INPUT_TYPE_MIN_LENGTH,
   TEXTAREA_TYPE_MAX_LENGTH,
@@ -9,7 +11,6 @@ import {
 } from "./constants";
 
 export const validateAnnouncementCreation = (): ValidationChain[] => [
-  check("price").optional().isNumeric(),
   check("make", getFieldValidationMessage("Make", "required")).exists(),
   check("model", getFieldValidationMessage("Model", "required")).exists(),
   check("year", getFieldValidationMessage("Year", "required"))
@@ -26,13 +27,28 @@ export const validateAnnouncementCreation = (): ValidationChain[] => [
     min: TEXTAREA_TYPE_MIN_LENGTH,
     max: TEXTAREA_TYPE_MAX_LENGTH,
   }),
-  check("files").custom((value, { req }) => {
+  check("images").custom((value, { req }) => {
     if (!req.files || req.files.length < 1) {
-      throw new Error(getFieldValidationMessage("File", "required"));
+      throw new Error(getFieldValidationMessage("Image", "required"));
     }
 
     return true;
   }),
+  check("price", getFieldValidationMessage("Price", "required"))
+    .isNumeric()
+    .exists()
+    .custom((value) => {
+      if (
+        parseFloat(value) < MIN_CAR_PRICE ||
+        parseFloat(value) > MAX_CAR_PRICE
+      ) {
+        throw new Error(
+          `Value must be between ${MIN_CAR_PRICE} and ${MAX_CAR_PRICE}`
+        );
+      }
+
+      return true;
+    }),
 ];
 
 export const validateRegister = (): ValidationChain[] => [
