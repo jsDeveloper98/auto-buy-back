@@ -14,10 +14,6 @@ router.post(
   AnnouncementController.create
 );
 
-router.get(
-  "/users/:userId/announcements",
-  checkAuth,
-  AnnouncementController.get
-);
+router.get("/users/:userId/announcements", AnnouncementController.get);
 
 export { router as userRoute };

@@ -3,7 +3,7 @@ import express from "express";
 import mongoose from "mongoose";
 import { config } from "dotenv";
 
-import { authRoute, userRoute } from "./routes";
+import { authRoute, userRoute, announcementsRoute } from "./routes";
 
 config();
 
@@ -16,6 +16,7 @@ app.use("/uploads", express.static("uploads"));
 
 app.use(authRoute);
 app.use(userRoute);
+app.use(announcementsRoute);
 
 const connectDatabase = async (): Promise<typeof mongoose> => {
   mongoose.set("strictQuery", false);

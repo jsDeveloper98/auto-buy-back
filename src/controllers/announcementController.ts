@@ -49,7 +49,7 @@ class AnnouncementC {
   async get(req: Request, res: Response) {
     try {
       const announcements = await Announcement.find({
-        user: req.params.userId,
+        ...(req.params.userId && { user: req.params.userId }),
       });
 
       res.json({
